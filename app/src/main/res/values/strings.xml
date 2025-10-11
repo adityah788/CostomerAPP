@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Customer_app</string>
+    <string name="app_name2">Smart Lock</string>
+    <string name="device_admin_description">This app manages device security and app access control for loan devices</string>
+</resources>
