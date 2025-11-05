@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "875756681584",
+    "firebase_url": "https://smart-lock-25988-default-rtdb.firebaseio.com",
+    "project_id": "smart-lock-25988",
+    "storage_bucket": "smart-lock-25988.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:875756681584:android:0074e0a0e9ffe0cc9637b5",
+        "android_client_info": {
+          "package_name": "com.example.customer_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBibRt1Mdx4HWxkCXpQ-5FJWfZoKhdVeDA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:875756681584:android:b445328313286f6b9637b5",
+        "android_client_info": {
+          "package_name": "com.example.mainadminapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBibRt1Mdx4HWxkCXpQ-5FJWfZoKhdVeDA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:875756681584:android:3501d396721614979637b5",
+        "android_client_info": {
+          "package_name": "com.example.sub_admin_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBibRt1Mdx4HWxkCXpQ-5FJWfZoKhdVeDA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
