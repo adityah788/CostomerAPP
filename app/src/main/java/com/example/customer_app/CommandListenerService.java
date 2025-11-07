@@ -299,11 +299,9 @@ public class CommandListenerService extends Service {
                             "com.miui.settings",
                             "com.samsung.android.settings",
                             "com.huawei.settings",
-                            "com.oppo.settings",
                             "com.oneplus.settings",
                             "com.oppo.settings",
                             "com.realme.settings",
-                            "com.oneplus.settings",
                             "com.vivo.settings",
                             "com.tecno.settings",
                             "com.transsion.settings",
@@ -423,6 +421,7 @@ public class CommandListenerService extends Service {
                     String command = factoryresetappSnapshot.child("command").getValue(String.class);
                     if ("FACTORY_RESET".equals(command)) {
                         AllowFactoryReset();
+
                         Log.d(TAG, "Giving permission for Factory reset App");
                     } else if ("PREV_FACTORY_RESET".equals(command)) {
                         PrevFactoryReset();
@@ -431,6 +430,24 @@ public class CommandListenerService extends Service {
 //                        stopAppBlockService();
                     }
                 }
+
+
+                // GAccount Allow/Disallow
+                DataSnapshot gaccountappSnapshot = snapshot.child("gaccount");
+                if (gaccountappSnapshot.exists()) {
+                    String command = gaccountappSnapshot.child("command").getValue(String.class);
+                    if ("ALLOW_GOOGLE_ACCOUNT".equals(command)) {
+                        AllowGAccount();
+
+                        Log.d(TAG, "Giving permission for Factory reset App");
+                    } else if ("PREV_GOOGLE_ACCOUNT".equals(command)) {
+                        PrevGAccount();
+                        Log.d(TAG, "Preventing User from Factory reset App");
+//                        unlockDangerousSettings();
+//                        stopAppBlockService();
+                    }
+                }
+
 
             }
 
@@ -641,13 +658,13 @@ public class CommandListenerService extends Service {
             Log.e(TAG, "Failed to apply DISALLOW_FACTORY_RESET restriction. Error: " + e.getMessage());
         }
 
-        try {
-            // 3. Disable Modification of accounts (to prevent removal of critical accounts)
-            dpm.addUserRestriction(adminComponent, UserManager.DISALLOW_MODIFY_ACCOUNTS);
-            Log.d(TAG, "Restriction applied: DISALLOW_MODIFY_ACCOUNTS");
-        } catch (SecurityException e) {
-            Log.e(TAG, "Failed to apply DISALLOW_MODIFY_ACCOUNTS restriction. Error: " + e.getMessage());
-        }
+//        try {
+//            // 3. Disable Modification of accounts (to prevent removal of critical accounts)
+//            dpm.addUserRestriction(adminComponent, UserManager.DISALLOW_MODIFY_ACCOUNTS);
+//            Log.d(TAG, "Restriction applied: DISALLOW_MODIFY_ACCOUNTS");
+//        } catch (SecurityException e) {
+//            Log.e(TAG, "Failed to apply DISALLOW_MODIFY_ACCOUNTS restriction. Error: " + e.getMessage());
+//        }
 
         // Note: Individual try-catch blocks are used to ensure that a failure in one
         // restriction doesn't prevent the others from being attempted.
@@ -670,6 +687,25 @@ public class CommandListenerService extends Service {
         }
 
 
+//        try {
+//            // 3. Re-enable Modification of accounts
+//            dpm.clearUserRestriction(adminComponent, UserManager.DISALLOW_MODIFY_ACCOUNTS);
+//            Log.d(TAG, "Restriction cleared: DISALLOW_MODIFY_ACCOUNTS");
+//        } catch (SecurityException e) {
+//            Log.e(TAG, "Failed to clear DISALLOW_MODIFY_ACCOUNTS restriction. Error: " + e.getMessage());
+//        }
+    }
+
+
+
+    private void AllowGAccount() {
+        if (!dpm.isAdminActive(adminComponent)) {
+            Log.e(TAG, "Device Admin not active - cannot unlock settings");
+            return;
+        }
+
+
+
         try {
             // 3. Re-enable Modification of accounts
             dpm.clearUserRestriction(adminComponent, UserManager.DISALLOW_MODIFY_ACCOUNTS);
@@ -677,6 +713,26 @@ public class CommandListenerService extends Service {
         } catch (SecurityException e) {
             Log.e(TAG, "Failed to clear DISALLOW_MODIFY_ACCOUNTS restriction. Error: " + e.getMessage());
         }
+    }
+
+
+    private void PrevGAccount() {
+        if (!dpm.isAdminActive(adminComponent)) {
+            Log.e(TAG, "Device Admin not active - cannot lock settings");
+            return;
+        }
+
+
+        try {
+            // 3. Disable Modification of accounts (to prevent removal of critical accounts)
+            dpm.addUserRestriction(adminComponent, UserManager.DISALLOW_MODIFY_ACCOUNTS);
+            Log.d(TAG, "Restriction applied: DISALLOW_MODIFY_ACCOUNTS");
+        } catch (SecurityException e) {
+            Log.e(TAG, "Failed to apply DISALLOW_MODIFY_ACCOUNTS restriction. Error: " + e.getMessage());
+        }
+
+        // Note: Individual try-catch blocks are used to ensure that a failure in one
+        // restriction doesn't prevent the others from being attempted.
     }
 
 

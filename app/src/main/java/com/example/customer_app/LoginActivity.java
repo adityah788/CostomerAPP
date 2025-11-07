@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -49,6 +51,9 @@ public class LoginActivity extends AppCompatActivity {
 //            navigateToMain();
 //            return;
 //        }
+
+        getFCMToken(); // Add this
+
 
         etSubAdminId = findViewById(R.id.subID);
         etPassword = findViewById(R.id.et_password);
@@ -197,4 +202,50 @@ public class LoginActivity extends AppCompatActivity {
         progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
         btnLogin.setEnabled(!show);
     }
+
+
+    private void getFCMToken() {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        String token = task.getResult();
+                        Log.d("FCM", "Token: " + token);
+
+                        // Save locally
+                        sp.edit().putString("fcmToken", token).apply();
+
+                        // Upload to Firebase
+                        uploadTokenToFirebase(token);
+                    }
+                });
+    }
+
+    private void uploadTokenToFirebase(String token) {
+        String subAdminId = sp.getString("subAdminId", "");
+        String buildNumber = sp.getString("buildNumber", "");
+
+        if (!subAdminId.isEmpty() && !buildNumber.isEmpty()) {
+            FirebaseDatabase.getInstance()
+                    .getReference("SubAdmins")
+                    .child(subAdminId)
+                    .child("buyers")
+                    .orderByChild("phoneBuild")
+                    .equalTo(buildNumber)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot buyerSnap : snapshot.getChildren()) {
+                                buyerSnap.getRef().child("fcmToken").setValue(token);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {}
+                    });
+        }
+    }
+
+
+
+
 }

@@ -185,7 +185,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void preventFactoryReset() {
         if (dpm.isAdminActive(adminComponent)) {
             dpm.addUserRestriction(adminComponent, UserManager.DISALLOW_FACTORY_RESET);
-            dpm.addUserRestriction(adminComponent, UserManager.DISALLOW_MODIFY_ACCOUNTS);
+//            dpm.addUserRestriction(adminComponent, UserManager.DISALLOW_MODIFY_ACCOUNTS);
             Log.d(TAG, "Factory reset prevented");
         }
     }
@@ -193,7 +193,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void allowFactoryReset() {
         if (dpm.isAdminActive(adminComponent)) {
             dpm.clearUserRestriction(adminComponent, UserManager.DISALLOW_FACTORY_RESET);
-            dpm.clearUserRestriction(adminComponent, UserManager.DISALLOW_MODIFY_ACCOUNTS);
+//            dpm.clearUserRestriction(adminComponent, UserManager.DISALLOW_MODIFY_ACCOUNTS);
             Log.d(TAG, "Factory reset allowed");
         }
     }
